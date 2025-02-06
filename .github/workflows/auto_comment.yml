@@ -12,12 +12,12 @@ jobs:
     steps:
       - name: Warn Bad Issue
         if: ${{ github.event.label.name == 'need improvement' }}
-        run: gh issue comment "$NUMBER" --body "$BODY"
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GH_REPO: ${{ github.repository }}
-          NUMBER: ${{ github.event.issue.number }}
-          BODY: |
+        uses: actions-cool/issues-helper@v3.6.0
+        with:
+          actions: "create-comment"
+          token: ${{ secrets.GITHUB_TOKEN }}
+          issue-number: ${{ github.event.issue.number }}
+          body: |
             📝 To help us better understand and address your issue, **please provide more information, or use the standard format**, otherwise we will not process this issue.
 
             Reference document: 
@@ -33,17 +33,4 @@ jobs:
 
               - [创建议题](https://docs.github.com/zh/issues/tracking-your-work-with-issues/using-issues/creating-an-issue)
               - [基本撰写和格式语法](https://docs.github.com/zh/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax)
-
-      - name: Comment on Todos Issue
-        if: ${{ github.event.label.name == 'todos' }}
-        run: gh issue comment "$NUMBER" --body "$BODY"
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GH_REPO: ${{ github.repository }}
-          NUMBER: ${{ github.event.issue.number }}
-          BODY: |
-            🚀 This issue has been labeled as `todos` and **added to our roadmap**. We will prioritize it and provide updates as we make progress.
-
-            ---
-
-            🚀 此 issue 已被标记为 `todos` 并**被列入开发计划中**。我们将优先处理它，同时也会将进展同步在下方。
+          emoji: "heart"
