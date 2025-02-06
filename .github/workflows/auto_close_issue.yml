@@ -9,7 +9,7 @@ jobs:
     permissions:
       issues: write
     steps:
-      - name: Warn Inactive Issue
+      - name: Warn Inactive Issue Before Close
         if: ${{ github.event.label.name == 'stale' }}
         uses: actions-cool/issues-helper@v3
         with:
@@ -47,25 +47,87 @@ jobs:
           actions: "close-issue"
           token: ${{ secrets.GITHUB_TOKEN }}
           issue-number: ${{ github.event.issue.number }}
+      - name: Comment Won't Fix Issue Before Close
+        if: ${{ github.event.label.name == 'wontfix' }}
+        uses: actions-cool/issues-helper@v3
+        with:
+          actions: "create-comment"
+          token: ${{ secrets.GITHUB_TOKEN }}
+          issue-number: ${{ github.event.issue.number }}
+          body: |
+            🚫 This issue has been marked as "Won't Fix". Here's why:
+
+            - The described behavior is working as intended
+            - The request falls outside our project scope/goals
+            - The cost/benefit ratio doesn't justify the change
+
+            If you have new information that might change this decision, feel free to:
+            1. Share your additional context
+            2. Propose alternative solutions
+            3. Start a discussion to explore different approaches
+
+            Thank you for your understanding and engagement! 🙏
+
+            ---
+
+            🚫 此 issue 被标记为"不予修复"，原因如下：
+
+            - 当前行为符合设计预期
+            - 该请求超出项目范围/目标
+            - 投入产出比不足以支持此变更
+
+            如果您有任何新的想法或建议，欢迎：
+            1. 分享更多上下文
+            2. 提出替代方案
+            3. 发起讨论以探索不同思路
+
+            感谢理解与支持！🙏
       - name: Close Won't Fix Issue
         if: ${{ github.event.label.name == 'wontfix' }}
-        uses: peter-evans/close-issue@v1
+        uses: actions-cool/issues-helper@v3
         with:
-          comment: |
-            🚫 After review, this issue has been closed as **it does not align with the current roadmap** Thank you for your understanding and contributions.
+          actions: "close-issue"
+          token: ${{ secrets.GITHUB_TOKEN }}
+          issue-number: ${{ github.event.issue.number }}
+      - name: Comment Notabug Issue Before Close
+        if: ${{ github.event.label.name == 'notabug' }}
+        uses: actions-cool/issues-helper@v3
+        with:
+          actions: "create-comment"
+          token: ${{ secrets.GITHUB_TOKEN }}
+          issue-number: ${{ github.event.issue.number }}
+          body: |
+            ✅ After careful review, we've determined this is not a bug. Here's why:
+
+            - The current behavior is working as designed
+            - This might be a misunderstanding of the feature
+            - The issue cannot be reproduced with the provided information
+
+            If you still believe this is a bug, please:
+            1. Provide a minimal reproduction
+            2. Share your expected behavior
+            3. Include more detailed environment information
+
+            Thank you for helping us improve our project! 💫
 
             ---
 
-            🚫 经过评估，此 issue 已被关闭，因为它**不在当前项目的重点范围内**。感谢您的理解与支持。
-          token: ${{ secrets.GITHUB_TOKEN }}
+            ✅ 经过仔细核查，这并非一个 bug，原因如下：
+
+            - 当前表现符合设计预期
+            - 可能是对功能理解有所偏差
+            - 基于已提供信息无法复现问题
+
+            如果您仍认为这是一个 bug，建议：
+            1. 提供最小复现示例
+            2. 说明您期望的表现
+            3. 补充更详细的环境信息
+
+            期待您的反馈！💡
       - name: Close Notabug Issue
         if: ${{ github.event.label.name == 'notabug' }}
-        uses: peter-evans/close-issue@v1
+        uses: actions-cool/issues-helper@v3
         with:
-          comment: |
-            🚫 This issue has been closed as **not a bug**. If you believe this is an error, please provide more details so we can investigate further.
-
-            ---
-
-            🚫 此 issue 已被关闭，因为它**不是错误**。如果您认为这是误判，请提供更多细节以便我们进一步调查。
+          actions: "close-issue"
           token: ${{ secrets.GITHUB_TOKEN }}
+          issue-number: ${{ github.event.issue.number }}
