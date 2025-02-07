@@ -1,0 +1,47 @@
+name: Comment on Release Issues
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  comment-on-issues:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get Release Info
+        id: release
+        run: |
+          echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+          echo "previous_tag=$(curl -s https://api.github.com/repos/${{ github.repository }}/releases | jq -r '.[1].tag_name')" >> $GITHUB_OUTPUT
+
+      - name: Collect PRs and Issues
+        id: collect
+        run: |
+          # 获取当前 release 和上一个 release 之间的所有合并 PR
+          prs=$(gh api graphql -f query='
+            query($owner:String!, $repo:String!, $since:GitTimestamp!) {
+              repository(owner:$owner, name:$repo) {
+                pullRequests(first:100, states:MERGED, orderBy:{field:UPDATED_AT, direction:DESC}) {
+                  nodes {
+                    number
+                    body
+                    mergedAt
+                  }
+                }
+              }
+            }' -f owner=${{ github.repository_owner }} -f repo=${{ github.event.repository.name }} \
+            | jq -r '.data.repository.pullRequests.nodes[] | select(.mergedAt > "${{ steps.release.outputs.previous_tag }}")')
+          
+          # 从 PR 描述中提取所有提到的 issue 编号
+          issues=$(echo "$prs" | grep -oP '#\K[0-9]+' | sort -u)
+          echo "issues=$issues" >> $GITHUB_OUTPUT
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Comment on Issues
+        run: |
+          for issue in ${{ steps.collect.outputs.issues }}; do
+            gh issue comment $issue "🎉 此 issue 相关的改动已在 [${{ steps.release.outputs.tag }}](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/releases/tag/${{ steps.release.outputs.tag }}) 版本中发布。"
+          done
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
