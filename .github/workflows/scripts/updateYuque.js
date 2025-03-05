@@ -6,15 +6,17 @@ const path = require("path");
  * @param {import('@actions/core')} param.core
  * @param {ReturnType<import('@actions/github').getOctokit>} param.github
  * @param {import('@actions/github').context} param.context
+ * @param {import('@actions/core').InputOptions} param.inputs
  */
-module.exports = async ({ core, github, context }) => {
+module.exports = async ({ core, github, context, inputs }) => {
   try {
     const group_login = "rw5g0z"; // 知识库所属组织
     const book_slug = "tlysub"; // 半璇测试
     const site_slug = "site"; // 站点
 
     // 从 GitHub Secrets 中获取语雀 token
-    const yuqueToken = core.getInput("token", { required: true });
+    const yuqueToken =
+      inputs?.token || core.getInput("token", { required: true });
     const API_BASE = "https://yuque-api.antfin-inc.com/api/v2";
 
     // 存储创建的文档ID，用于后续更新目录
