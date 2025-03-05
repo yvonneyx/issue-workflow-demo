@@ -15,9 +15,9 @@ module.exports = async ({ core, github, context, inputs }) => {
     const site_slug = "site"; // 站点
 
     // 从 GitHub Secrets 中获取语雀 token
-    const yuqueToken = inputs?.token;
+    const yuqueToken = 'iKlhPULvbTb7X5ed4rGhnQJderKlLr2QaihGTHub';
     const API_BASE = "https://yuque-api.antfin-inc.com/api/v2";
-    core.info(`yuqueToken: ${yuqueToken}`);
+
     // 存储创建的文档ID，用于后续更新目录
     const createdDocIds = {
       tutorials: [],
