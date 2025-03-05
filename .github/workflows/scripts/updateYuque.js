@@ -51,11 +51,7 @@ module.exports = async ({ core, github, context, inputs }) => {
             }
           );
 
-          if (!response.ok) {
-            throw new Error(`获取文档列表失败: ${response.statusText}`);
-          }
-
-          const data = await response.json();
+          const data = response.data;
           const docs = data.data;
 
           if (docs && docs.length > 0) {
@@ -111,16 +107,16 @@ module.exports = async ({ core, github, context, inputs }) => {
         const response = await axios.post(
           `${API_BASE}/repos/${group_login}/${book_slug}/docs`,
           {
+            title: title,
+            public: 1,
+            format: "lake",
+            body: body,
+          },
+          {
             headers: {
               "Content-Type": "application/json",
               "X-Auth-Token": yuqueToken,
             },
-            body: JSON.stringify({
-              title: title,
-              public: 1,
-              format: "lake",
-              body: body,
-            }),
           }
         );
 
