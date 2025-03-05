@@ -14,6 +14,7 @@ module.exports = async ({ core, github, context, inputs }) => {
     const book_slug = "luaak6"; // 半璇测试
     const yuqueToken = "hRbGiwi6VQvQ4TatGrvvZnts7zkq3WjNCKWxEY1T";
     const API_BASE = "https://www.yuque.com/api/v2";
+    const site_slug = "site"; // 站点
 
     // 存储创建的文档ID，用于后续更新目录
     const createdDocIds = {
