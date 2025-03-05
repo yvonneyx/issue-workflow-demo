@@ -1,5 +1,6 @@
 const fs = require("fs");
 const path = require("path");
+const axios = require("axios");
 
 /**
  * @param {Object} param
@@ -15,7 +16,7 @@ module.exports = async ({ core, github, context, inputs }) => {
     const site_slug = "site"; // 站点
 
     // 从 GitHub Secrets 中获取语雀 token
-    const yuqueToken = 'iKlhPULvbTb7X5ed4rGhnQJderKlLr2QaihGTHub';
+    const yuqueToken = "iKlhPULvbTb7X5ed4rGhnQJderKlLr2QaihGTHub";
     const API_BASE = "https://yuque-api.antfin-inc.com/api/v2";
 
     // 存储创建的文档ID，用于后续更新目录
@@ -40,10 +41,9 @@ module.exports = async ({ core, github, context, inputs }) => {
         while (hasMore) {
           core.info(`获取文档列表，偏移量: ${offset}, 数量: ${limit}...`);
 
-          const response = await fetch(
+          const response = await axios.get(
             `${API_BASE}/repos/${group_login}/${book_slug}/docs?offset=${offset}&limit=${limit}`,
             {
-              method: "GET",
               headers: {
                 "Content-Type": "application/json",
                 "X-Auth-Token": yuqueToken,
@@ -77,10 +77,9 @@ module.exports = async ({ core, github, context, inputs }) => {
         for (const doc of allDocs) {
           core.info(`删除文档: ${doc.title} (${doc.id})...`);
 
-          const deleteResponse = await fetch(
+          const deleteResponse = await axios.delete(
             `${API_BASE}/repos/${group_login}/${book_slug}/docs/${doc.id}`,
             {
-              method: "DELETE",
               headers: {
                 "Content-Type": "application/json",
                 "X-Auth-Token": yuqueToken,
@@ -109,10 +108,9 @@ module.exports = async ({ core, github, context, inputs }) => {
       try {
         core.info(`创建文档: ${title}...`);
 
-        const response = await fetch(
+        const response = await axios.post(
           `${API_BASE}/repos/${group_login}/${book_slug}/docs`,
           {
-            method: "POST",
             headers: {
               "Content-Type": "application/json",
               "X-Auth-Token": yuqueToken,
@@ -152,10 +150,9 @@ module.exports = async ({ core, github, context, inputs }) => {
       try {
         core.info("更新知识库目录...");
 
-        const response = await fetch(
+        const response = await axios.put(
           `${API_BASE}/repos/${group_login}/${book_slug}/toc`,
           {
-            method: "PUT",
             headers: {
               "Content-Type": "application/json",
               "X-Auth-Token": yuqueToken,
