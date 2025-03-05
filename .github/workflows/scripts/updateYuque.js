@@ -1,6 +1,5 @@
 const fs = require("fs");
 const path = require("path");
-const axios = require("axios");
 
 /**
  * @param {Object} param
@@ -11,13 +10,10 @@ const axios = require("axios");
  */
 module.exports = async ({ core, github, context, inputs }) => {
   try {
-    const group_login = "rw5g0z"; // 知识库所属组织
-    const book_slug = "tlysub"; // 半璇测试
-    const site_slug = "site"; // 站点
-
-    // 从 GitHub Secrets 中获取语雀 token
-    const yuqueToken = "iKlhPULvbTb7X5ed4rGhnQJderKlLr2QaihGTHub";
-    const API_BASE = "https://yuque-api.antfin-inc.com/api/v2";
+    const group_login = "antv"; // 知识库所属组织
+    const book_slug = "luaak6"; // 半璇测试
+    const yuqueToken = "hRbGiwi6VQvQ4TatGrvvZnts7zkq3WjNCKWxEY1T";
+    const API_BASE = "https://www.yuque.com/api/v2";
 
     // 存储创建的文档ID，用于后续更新目录
     const createdDocIds = {
@@ -41,9 +37,10 @@ module.exports = async ({ core, github, context, inputs }) => {
         while (hasMore) {
           core.info(`获取文档列表，偏移量: ${offset}, 数量: ${limit}...`);
 
-          const response = await axios.get(
+          const response = await fetch(
             `${API_BASE}/repos/${group_login}/${book_slug}/docs?offset=${offset}&limit=${limit}`,
             {
+              method: "GET",
               headers: {
                 "Content-Type": "application/json",
                 "X-Auth-Token": yuqueToken,
@@ -51,7 +48,11 @@ module.exports = async ({ core, github, context, inputs }) => {
             }
           );
 
-          const data = response.data;
+          if (!response.ok) {
+            throw new Error(`获取文档列表失败: ${response.statusText}`);
+          }
+
+          const data = await response.json();
           const docs = data.data;
 
           if (docs && docs.length > 0) {
@@ -73,9 +74,10 @@ module.exports = async ({ core, github, context, inputs }) => {
         for (const doc of allDocs) {
           core.info(`删除文档: ${doc.title} (${doc.id})...`);
 
-          const deleteResponse = await axios.delete(
+          const deleteResponse = await fetch(
             `${API_BASE}/repos/${group_login}/${book_slug}/docs/${doc.id}`,
             {
+              method: "DELETE",
               headers: {
                 "Content-Type": "application/json",
                 "X-Auth-Token": yuqueToken,
@@ -104,19 +106,20 @@ module.exports = async ({ core, github, context, inputs }) => {
       try {
         core.info(`创建文档: ${title}...`);
 
-        const response = await axios.post(
+        const response = await fetch(
           `${API_BASE}/repos/${group_login}/${book_slug}/docs`,
           {
-            title: title,
-            public: 1,
-            format: "lake",
-            body: body,
-          },
-          {
+            method: "POST",
             headers: {
               "Content-Type": "application/json",
               "X-Auth-Token": yuqueToken,
             },
+            body: JSON.stringify({
+              title: title,
+              public: 1,
+              format: "lake",
+              body: body,
+            }),
           }
         );
 
@@ -146,9 +149,10 @@ module.exports = async ({ core, github, context, inputs }) => {
       try {
         core.info("更新知识库目录...");
 
-        const response = await axios.put(
+        const response = await fetch(
           `${API_BASE}/repos/${group_login}/${book_slug}/toc`,
           {
+            method: "PUT",
             headers: {
               "Content-Type": "application/json",
               "X-Auth-Token": yuqueToken,
