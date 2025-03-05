@@ -5,8 +5,8 @@ on:
     types: [closed]
     branches:
       - main
-    # paths:
-    #   - "**/*.zh.md"
+    paths:
+      - "**/*.zh.md"
 
 jobs:
   check-and-update:
@@ -22,6 +22,12 @@ jobs:
 
       - name: Install dependencies
         run: npm install node-fetch
+
+      - name: Create test directory
+        run: mkdir -p site/docs
+
+      - name: Create test file
+        run: echo "# 测试文档" > site/docs/test.zh.md
 
       - name: Run Yuque update script
         uses: actions/github-script@v7.0.1
