@@ -20,6 +20,9 @@ jobs:
         with:
           node-version: 20
 
+      - name: Install axios
+        run: npm install axios
+
       - name: Run Yuque update script
         uses: actions/github-script@v7.0.1
         with:
