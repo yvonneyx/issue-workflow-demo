@@ -8,12 +8,14 @@ const path = require("path");
  * @param {import('@actions/github').context} param.context
  * @param {import('@actions/core').InputOptions} param.inputs
  */
-module.exports = async ({ core, token }) => {
+module.exports = async ({ core, inputs }) => {
   try {
     const API_BASE = "https://www.yuque.com/api/v2";
     const group_login = "antv"; // 知识库所属组织
     const book_slug = "luaak6"; // G2 5.0 文档
     const site_slug = "site"; // 站点
+
+    const token = inputs.token;
 
     // 存储创建的文档ID，用于后续更新目录
     const createdDocIds = {
