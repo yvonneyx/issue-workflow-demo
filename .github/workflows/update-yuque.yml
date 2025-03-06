@@ -1,13 +1,12 @@
 name: Update Documentation on Yuque
 
 on:
-  # pull_request:
-  #   types: [closed]
-  push:
+  pull_request:
+    types: [closed]
     branches:
       - main
-    # paths:
-    #   - "**/*.zh.md"
+    paths:
+      - "**/*.md"
 
 jobs:
   check-and-update:
@@ -26,4 +25,11 @@ jobs:
         with:
           script: |
             const script = require('./.github/workflows/scripts/updateYuque.js');
-            await script({ core, token: '${{ secrets.YUQUE_TOKEN }}' });
+            await script({
+              core,
+              inputs: {
+                token: '${{ secrets.YUQUE_TOKEN }}', // 语雀 Token
+                book_slug: 'osbmvn', // 外网语雀知识库
+                site_slug: 'packages/site', // 文档所在位置
+              }
+            });
