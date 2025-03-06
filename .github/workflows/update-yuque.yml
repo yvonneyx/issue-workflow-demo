@@ -30,6 +30,6 @@ jobs:
               inputs: {
                 token: '${{ secrets.YUQUE_TOKEN }}', // 语雀 Token
                 book_slug: 'osbmvn', // 外网语雀知识库
-                site_slug: 'packages/site', // 文档所在位置
+                site_slug: 'site', // 文档所在位置
               }
             });
