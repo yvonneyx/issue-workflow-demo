@@ -8,12 +8,11 @@ const path = require("path");
  * @param {import('@actions/github').context} param.context
  * @param {import('@actions/core').InputOptions} param.inputs
  */
-module.exports = async ({ core, github, context, inputs }) => {
+module.exports = async ({ core, token }) => {
   try {
-    const group_login = "antv"; // 知识库所属组织
-    const book_slug = "luaak6"; // 半璇测试
-    const yuqueToken = "hRbGiwi6VQvQ4TatGrvvZnts7zkq3WjNCKWxEY1T";
     const API_BASE = "https://www.yuque.com/api/v2";
+    const group_login = "antv"; // 知识库所属组织
+    const book_slug = "luaak6"; // G2 5.0 文档
     const site_slug = "site"; // 站点
 
     // 存储创建的文档ID，用于后续更新目录
@@ -44,7 +43,7 @@ module.exports = async ({ core, github, context, inputs }) => {
               method: "GET",
               headers: {
                 "Content-Type": "application/json",
-                "X-Auth-Token": yuqueToken,
+                "X-Auth-Token": token,
               },
             }
           );
@@ -81,7 +80,7 @@ module.exports = async ({ core, github, context, inputs }) => {
               method: "DELETE",
               headers: {
                 "Content-Type": "application/json",
-                "X-Auth-Token": yuqueToken,
+                "X-Auth-Token": token,
               },
             }
           );
@@ -113,7 +112,7 @@ module.exports = async ({ core, github, context, inputs }) => {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              "X-Auth-Token": yuqueToken,
+              "X-Auth-Token": token,
             },
             body: JSON.stringify({
               title: title,
@@ -156,7 +155,7 @@ module.exports = async ({ core, github, context, inputs }) => {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",
-              "X-Auth-Token": yuqueToken,
+              "X-Auth-Token": token,
             },
             body: JSON.stringify({
               action: "appendNode",
