@@ -21,17 +21,9 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install dependencies
-        run: npm install node-fetch
-
       - name: Run Yuque update script
         uses: actions/github-script@v7.0.1
         with:
           script: |
             const script = require('./.github/workflows/scripts/updateYuque.js');
-            await script({
-              core, 
-              inputs: {
-                token: '${{ secrets.YUQUE_TOKEN }}'
-              }
-            });
+            await script({ core, token: '${{ secrets.YUQUE_TOKEN }}' });
