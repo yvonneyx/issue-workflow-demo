@@ -1,8 +1,9 @@
 name: Update Documentation on Yuque
 
 on:
-  pull_request:
-    types: [closed]
+  # pull_request:
+  #   types: [closed]
+  push:
     branches:
       - main
     # paths:

@@ -38,7 +38,8 @@ module.exports = async ({ core, inputs }) => {
         // 循环获取所有文档
         while (hasMore) {
           core.info(`获取文档列表，偏移量: ${offset}, 数量: ${limit}...`);
-
+          core.info(`token: ${token}`);
+          
           const response = await fetch(
             `${API_BASE}/repos/${group_login}/${book_slug}/docs?offset=${offset}&limit=${limit}`,
             {
