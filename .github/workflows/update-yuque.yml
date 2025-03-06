@@ -6,7 +6,7 @@ on:
     branches:
       - main
     # paths:
-      # - "**/*.zh.md"
+    #   - "**/*.zh.md"
 
 jobs:
   check-and-update:
@@ -35,4 +35,9 @@ jobs:
           token: ${{ secrets.YUQUE_GROUP_TOKEN }}
           script: |
             const script = require('./.github/workflows/scripts/updateYuque.js');
-            await script({ core, token: ${{ secrets.YUQUE_GROUP_TOKEN }}' });
+            await script({
+              core, 
+              inputs: {
+                token: '${{ secrets.YUQUE_GROUP_TOKEN }}'
+              }
+            });
