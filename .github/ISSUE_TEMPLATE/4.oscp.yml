@@ -1,6 +1,7 @@
 name: '✏️ OSCP Season of Docs'
 description: '通过开源社区的力量，共同打造更友好、更易上手的 AntV 文档 | Contribute to AntV G6 documentation with the power of open source community'
 labels: ['OSCP']
+projects: ['2025 AntV OSCP Season of Docs']
 title: '[Docs]: '
 body:
   - type: textarea
