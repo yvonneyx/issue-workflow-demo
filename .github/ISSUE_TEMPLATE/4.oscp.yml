@@ -3,8 +3,8 @@ description: '通过开源社区的力量，共同打造更友好、更易上手
 labels: ['OSCP']
 title: '[Docs]: '
 body:
-  -
   - type: textarea
+    id: 'summary'
     attributes:
       value: |
         ### 任务介绍
