@@ -6,7 +6,7 @@ body:
   - type: textarea
     id: 'summary'
     attributes:
-      label: 任务介绍
+      label: 
       value: |
         > 此 ISSUE 为 [AntV 开源共建计划（AntV Open Source Contribution Plan，简称 AntV OSCP）Phase3 - 文档季](https://github.com/antvis/G6/issues/6882)的任务 ISSUE，欢迎社区开发者参与共建~
         >  - 更多任务，可查看 [GitHub Project - 2025 AntV OSCP Season of Docs](https://github.com/orgs/antvis/projects/31)。
